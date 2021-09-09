@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField]
     Transform startPoint;
+    [SerializeField]
+    Transform endPoint;
 
     [SerializeField]
     int currentScene = 0;
@@ -14,31 +16,52 @@ public class Player : MonoBehaviour
     Vector3 spawnPoint;
     public float moveSpeed = 1.0f;
     bool differentPoint = false;
+    bool spaceOn = false;
+    float spaceDirect = 1f;
 
     int currentCoin;
     GameObject[] coins;
     List<GameObject> coin = new List<GameObject>();
 
+    GameObject[] number1;
+    GameObject[] number2;
+
+    Vector3[] coinPosition;
+    Vector3[] enemyPosition;
+
     void Start()
     {
-        GameObject[] number = GameObject.FindGameObjectsWithTag("Coin");
+        number1 = GameObject.FindGameObjectsWithTag("Coin");
+        number2 = GameObject.FindGameObjectsWithTag("Enemy");
 
-        if (number == null)
+        coinPosition = new Vector3[number1.Length];
+        enemyPosition = new Vector3[number2.Length];
+
+        if (number1 == null)
         {
             currentCoin = 0;
             differentPoint = true;
         }
 
-        else
-            currentCoin = number.Length;
 
+        else
+            currentCoin = number1.Length;
+
+
+
+        StartCoroutine(RemeberPosition());
         transform.position = startPoint.position + new Vector3(0f,0.74f,0f);
         spawnPoint = startPoint.position + new Vector3(0f, 0.74f, 0f);
     }
 
     void Update()
     {
-        
+        bool raycastHit = Physics.Raycast(transform.position, new Vector3(0f,spaceDirect,0f), Mathf.Infinity, LayerMask.GetMask("Ground"));
+
+        if (raycastHit && !spaceOn && Input.GetKeyDown(KeyCode.Space))
+        {
+            spaceOn = true;
+        }
     }
 
     private void FixedUpdate()
@@ -46,7 +69,23 @@ public class Player : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        transform.Translate(new Vector3(h, 0f, v).normalized * moveSpeed * 0.1f);
+        if(!spaceOn)
+            transform.Translate(new Vector3(h, 0f, v).normalized * moveSpeed * 0.1f);
+
+        else if(spaceOn)
+            transform.Translate(new Vector3(0f, spaceDirect, 0f).normalized * 5f * 0.1f);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Ground")
+        {
+            if(spaceOn)
+            {
+                spaceOn = false;
+                spaceDirect *= -1f;
+            }
+        }    
     }
 
 
@@ -55,26 +94,21 @@ public class Player : MonoBehaviour
         if (other.gameObject.tag == "Enemy")
         {
             transform.position = spawnPoint;
-
+            StartCoroutine(ResetPosition());
             StartCoroutine(ActiveCoin());
         }
 
         else if (other.gameObject.tag == "GreenSpace")
         {
-            spawnPoint = other.gameObject.transform.position + new Vector3(0f,0.74f,0f);
+            spawnPoint = other.gameObject.transform.position + new Vector3(0f,0.74f * spaceDirect,0f);
             
-            if(differentPoint && other.transform == startPoint)
-            {
-                return;
-            }
-
-            else if(currentCoin - coin.Count > 0)
+            if(currentCoin - coin.Count > 0)
             {
                 currentCoin -= coin.Count;
                 coin.Clear();
             }
 
-            else if( currentCoin - coin.Count <= 0)
+            else if( currentCoin - coin.Count <= 0 && other.transform == endPoint)
             {
                 SceneManager.LoadScene(currentScene + 1);
             }
@@ -85,6 +119,8 @@ public class Player : MonoBehaviour
             other.gameObject.SetActive(false);
             coin.Add(other.gameObject);
         }
+        
+        
     }
 
     IEnumerator ActiveCoin()
@@ -99,5 +135,48 @@ public class Player : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator ResetPosition()
+    {
+        
+
+        if(coinPosition != null)
+        {
+            for(int i = 0; i< number1.Length; i++)
+            {
+                number1[i].transform.position = coinPosition[i];
+            }
+        }
+
+
+        if(enemyPosition != null)
+        {
+            for (int i = 0; i < number2.Length; i++)
+            {
+                number2[i].transform.position = enemyPosition[i];
+            }
+        }
+
+        yield return null;
+    }
+
+    IEnumerator RemeberPosition()
+    {
+        if (number1 != null)
+        {
+            for (int i = 0; i < number1.Length; i++)
+            {
+                coinPosition[i] = number1[i].transform.position;
+            }
+        }
+
+        if (number2 != null)
+        {
+            for (int i = 0; i < number2.Length; i++)
+            {
+                enemyPosition[i] = number2[i].transform.position;
+            }
+        }
+        yield return null;
+    }
     
 }
