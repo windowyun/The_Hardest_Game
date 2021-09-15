@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: e1179ef0bd55c0742a709437579080f8, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -294,13 +294,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154113088}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.25181288, y: -0, z: -0, w: 0.96777594}
+  m_LocalPosition: {x: 0, y: 4.49, z: -8.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 29.17, y: 0, z: 0}
 --- !u!1 &156515093
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,6 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPoint: {fileID: 68841983}
+  endPoint: {fileID: 0}
   currentScene: 0
   moveSpeed: 3
 --- !u!65 &156515096
@@ -441,7 +442,7 @@ GameObject:
   - component: {fileID: 199929045}
   - component: {fileID: 199929044}
   - component: {fileID: 199929043}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}

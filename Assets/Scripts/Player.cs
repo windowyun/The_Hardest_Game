@@ -69,11 +69,16 @@ public class Player : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        if(!spaceOn)
-            transform.Translate(new Vector3(h, 0f, v).normalized * moveSpeed * 0.1f);
+        bool raycastG = Physics.Raycast(transform.position + new Vector3(h, 0f, v)  * 0.55f, new Vector3(0f, spaceDirect * -1f, 0f), Mathf.Infinity, LayerMask.GetMask("Ground"));
 
-        else if(spaceOn)
-            transform.Translate(new Vector3(0f, spaceDirect, 0f).normalized * 5f * 0.1f);
+        if (raycastG)
+        {
+            if (!spaceOn)
+                transform.Translate(new Vector3(h, 0f, v).normalized * moveSpeed * 0.1f);
+
+            else if (spaceOn)
+                transform.Translate(new Vector3(0f, spaceDirect, 0f).normalized * 5f * 0.1f);
+        }    
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -178,5 +183,15 @@ public class Player : MonoBehaviour
         }
         yield return null;
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+      
+        Gizmos.DrawRay(transform.position + new Vector3(h, 0f, v) * 0.5f, new Vector3(0f, spaceDirect * -1f, 0f) * 10f);
+    }
 }
