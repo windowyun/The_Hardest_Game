@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
 
     Vector3 spawnPoint;
     public float moveSpeed = 1.0f;
-    bool differentPoint = false;
+    //bool differentPoint = false;
     bool spaceOn = false;
     float spaceDirect = 1f;
 
@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
         if (number1 == null)
         {
             currentCoin = 0;
-            differentPoint = true;
+            //differentPoint = true;
         }
 
 
@@ -149,6 +149,8 @@ public class Player : MonoBehaviour
             for(int i = 0; i< number1.Length; i++)
             {
                 number1[i].transform.position = coinPosition[i];
+                if (number1[i].GetComponent<Enemy>() != null)
+                    number1[i].GetComponent<Enemy>().ZeroCtime();
             }
         }
 
@@ -158,6 +160,8 @@ public class Player : MonoBehaviour
             for (int i = 0; i < number2.Length; i++)
             {
                 number2[i].transform.position = enemyPosition[i];
+                if (number2[i].GetComponent<Enemy>() != null)
+                    number2[i].GetComponent<Enemy>().ZeroCtime();
             }
         }
 

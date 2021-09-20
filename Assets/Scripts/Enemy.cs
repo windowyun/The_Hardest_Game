@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     int nextMove = 1;
     float rememberSpeed;
     float ctime = 0f;
+  
     Vector3 rememberPosition;
     Rigidbody rigid2;
 
@@ -55,6 +56,12 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(waitSecond);
         speed = rememberSpeed;
         yield return null;
+    }
+
+    public void ZeroCtime()
+    {
+        ctime = 0f;
+        nextMove = 1;
     }
 
 }
