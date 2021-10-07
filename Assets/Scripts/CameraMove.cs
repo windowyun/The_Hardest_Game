@@ -7,10 +7,15 @@ public class CameraMove : MonoBehaviour
 
     [SerializeField]
     Transform cameraArm;
+    [SerializeField]
+    float speed = 10f;
+
+
+    Vector3 worldDefalut;
 
     void Start()
     {
-        
+        worldDefalut = transform.forward;    
     }
 
     // Update is called once per frame
@@ -22,6 +27,7 @@ public class CameraMove : MonoBehaviour
     private void LateUpdate()
     {
         LookAround();
+        zoomin();
     }
 
     void LookAround()
@@ -35,5 +41,12 @@ public class CameraMove : MonoBehaviour
 
             cameraArm.rotation = Quaternion.Euler(camAngle.x - mouseDelta.y, camAngle.y + mouseDelta.x, camAngle.z);
         }
+    }
+
+    void zoomin()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel") * speed;
+
+        transform.localPosition = transform.localPosition + (worldDefalut * scroll);
     }
 }

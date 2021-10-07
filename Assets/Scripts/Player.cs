@@ -29,6 +29,8 @@ public class Player : MonoBehaviour
     Vector3[] coinPosition;
     Vector3[] enemyPosition;
 
+    float curSpace = new float();
+
     void Start()
     {
         number1 = GameObject.FindGameObjectsWithTag("Coin");
@@ -47,7 +49,7 @@ public class Player : MonoBehaviour
         else
             currentCoin = number1.Length;
 
-
+        curSpace = spaceDirect;
 
         StartCoroutine(RemeberPosition());
         transform.position = startPoint.position + new Vector3(0f,0.74f,0f);
@@ -98,6 +100,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.tag == "Enemy")
         {
+            spaceDirect = curSpace;
             transform.position = spawnPoint;
             StartCoroutine(ResetPosition());
             StartCoroutine(ActiveCoin());
@@ -105,9 +108,17 @@ public class Player : MonoBehaviour
 
         else if (other.gameObject.tag == "GreenSpace")
         {
-            spawnPoint = other.gameObject.transform.position + new Vector3(0f,0.74f * spaceDirect,0f);
-            
-            if(currentCoin - coin.Count > 0)
+
+            curSpace = spaceDirect;
+
+            if(spaceOn)
+            {
+                curSpace *= -1f;
+            }
+
+            spawnPoint = other.gameObject.transform.position + new Vector3(0f, other.gameObject.transform.localScale.y * 0.5f * curSpace -(0.01f * spaceDirect),0f);
+
+            if (currentCoin - coin.Count > 0)
             {
                 currentCoin -= coin.Count;
                 coin.Clear();
